@@ -1,6 +1,9 @@
 name: Test
 
-on: [push]
+on:
+  push:
+    tags-ignore:
+      - '**'
 
 jobs:
   build:
@@ -18,15 +21,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[test]"
-          pip install "genbadge[coverage]"
       - name: Run pytest
-        # Run tox using the version of Python in `PATH`
         run: |
-          pytest --durations=0 --cov=src/mdslicer -sv
-          coverage html -d public/coverage
-          coverage xml
-          genbadge coverage -i coverage.xml -o public/coverage.svg
-      - name: Upload coverage report and badge
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public/coverage/
+          pytest --durations=0 -sv

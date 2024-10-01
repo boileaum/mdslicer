@@ -37,11 +37,16 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install -U pip
-          pip install -e ".[doc]"
-      - name: Build documentation
+          pip install -e ".[doc,test]"
+          pip install "genbadge[coverage]"
+      - name: Build documentation and coverage report
         run: |
           source .venv/bin/activate
           sphinx-build -b html docs/source/ public/
+          pytest --cov=src/mdslicer
+          coverage html -d public/coverage
+          coverage xml
+          genbadge coverage -i coverage.xml -o public/coverage.svg
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
@@ -51,9 +56,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      # Add this
-      - name: Update Coverage Badge
-        uses: we-cli/coverage-badge-action@main
   release:
     runs-on: ubuntu-latest
     steps:
