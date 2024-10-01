@@ -1,10 +1,8 @@
 # mdslicer
 
-[![pipeline status](https://github.com/boileaum/mdslicer/badges/main/pipeline.svg)](https://github.com/boileaum/mdslicer/-/commits/main)
-[![coverage report](https://github.com/boileaum/mdslicer/badges/main/coverage.svg)](https://boileaum.github.io/mdslicer/coverage)
-[![Latest Release](https://github.com/boileaum/mdslicer/-/badges/release.svg)](https://github.com/boileaum/mdslicer/-/releases)
-
-## Description
+[![pipeline status](https://github.com/boileaum/mdslicer/actions/workflows/test.yml/badge.svg)](https://github.com/boileaum/mdslicer/actions)
+[![cov](https://boileaum.github.io/mdslicer/coverage.svg)](https://boileaum.github.io/mdslicer/coverage)
+[![Latest Release](https://img.shields.io/github/v/release/boileaum/mdslicer?label=release)](https://github.com/boileaum/mdslicer/releases)
 
 A library to slice a markdown file into HTML sections.
 
