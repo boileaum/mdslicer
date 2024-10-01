@@ -4,20 +4,29 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - name: Install tox and any other packages
-        run: pip install tox
-      - name: Run tox
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+          pip install "genbadge[coverage]"
+      - name: Run pytest
         # Run tox using the version of Python in `PATH`
-        run: tox -e py
+        run: |
+          pytest --durations=0 --cov=src/{{ cookiecutter.project_slug }} -sv
+          coverage html -d public/coverage
+          coverage xml
+          genbadge coverage --input coverage.xml --output public/coverage.svg
+      - name: Upload coverage report and badge
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public/coverage/
