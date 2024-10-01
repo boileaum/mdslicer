@@ -25,7 +25,7 @@ jobs:
           pytest --durations=0 --cov=src/mdslicer -sv
           coverage html -d public/coverage
           coverage xml
-          genbadge coverage --input coverage.xml --output public/coverage.svg
+          genbadge coverage -i coverage.xml -o public/coverage.svg
       - name: Upload coverage report and badge
         uses: actions/upload-pages-artifact@v3
         with:
