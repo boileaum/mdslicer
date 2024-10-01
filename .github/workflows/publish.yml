@@ -18,33 +18,35 @@ permissions:
 jobs:
   deploy:  # Deploy documentation built with sphinx on github pages 
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-
       - name: Install dependencies
         run: |
           python -m venv .venv
           source .venv/bin/activate
           pip install -U pip
           pip install -e ".[doc]"
-
       - name: Build documentation
         run: |
           source .venv/bin/activate
           sphinx-build -b html docs/source/ public/
-
-      - name: Upload documentation
-        uses: actions/upload-artifact@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: documentation
           path: public/
-
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   release:
     runs-on: ubuntu-latest
