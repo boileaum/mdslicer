@@ -2,8 +2,10 @@ name: Test
 
 on:
   push:
+    branches:
+      - '**'  # Push events to all branches.
     tags-ignore:
-      - '**'
+      - '**'  # Ignore tag events.
 
 jobs:
   build:
