@@ -51,7 +51,9 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
+      # Add this
+      - name: Update Coverage Badge
+        uses: we-cli/coverage-badge-action@main
   release:
     runs-on: ubuntu-latest
     steps:
