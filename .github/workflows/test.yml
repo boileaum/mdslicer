@@ -22,7 +22,7 @@ jobs:
       - name: Run pytest
         # Run tox using the version of Python in `PATH`
         run: |
-          pytest --durations=0 --cov=src/{{ cookiecutter.project_slug }} -sv
+          pytest --durations=0 --cov=src/mdslicer -sv
           coverage html -d public/coverage
           coverage xml
           genbadge coverage --input coverage.xml --output public/coverage.svg
