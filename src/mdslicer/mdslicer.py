@@ -24,7 +24,7 @@ def md_slugify(value: str) -> str:
 def get_sections(md_content: str) -> tuple[list[dict], list[dict]]:
     """
     Parse markdown string to build a list of section dicts:
-    
+
     >>> sections, toc = get_sections(md_content)
     >>> print(section[0])
     {
@@ -32,7 +32,7 @@ def get_sections(md_content: str) -> tuple[list[dict], list[dict]]:
         'id': slugify(title),
         'content': section_content
     }
-    
+
 
     Also return the table of content tokens
 
@@ -49,7 +49,7 @@ def get_sections(md_content: str) -> tuple[list[dict], list[dict]]:
     html = md.convert(md_content)
     # Build section dict
     soup = bs4.BeautifulSoup(html, "html.parser")
-    section_dict = {}
+    sections: list[dict[str, str]] = []  # List of section dicts
 
     # If section does not start with a h2 tag
     no_h2_section = ""
@@ -60,20 +60,16 @@ def get_sections(md_content: str) -> tuple[list[dict], list[dict]]:
             no_h2_section += str(tag)
 
     if no_h2_section:
-        section_dict[""] = no_h2_section
+        sections.append({"title": "", "id": "", "content": no_h2_section})
 
     # Parse the rest
     for h2 in soup.find_all("h2"):
         title = h2.text
-        section_dict[title] = ""
+        content = ""
         for tag in h2.next_siblings:
             if isinstance(tag, bs4.Tag) and tag.name == "h2":
                 break
-            section_dict[title] += str(tag)
-
-    sections = []
-    for title, content in section_dict.items():
-        section = {"title": title, "id": md_slugify(title), "content": content}
-        sections.append(section)
+            content += str(tag)
+        sections.append({"title": title, "id": md_slugify(title), "content": content})
 
     return sections, md.toc_tokens
