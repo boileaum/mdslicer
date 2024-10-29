@@ -11,5 +11,3 @@ A library to slice a markdown file into HTML sections.
 
 * TODO
 * More TODO
-
-See [Documentation](https://boileaum.github.io/mdslicer) for details.
