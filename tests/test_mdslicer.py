@@ -71,7 +71,6 @@ def test_get_sections():
     sections, toc = mdslicer.get_sections(md_sections)
     assert sections == expected_parsed_sections
 
-    print(toc)
     toc_1 = toc[0]
     assert toc_1["children"] == []
     assert toc_1["id"] == "help-today-forget-tell-positive-could-yeah"
