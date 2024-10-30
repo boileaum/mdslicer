@@ -18,7 +18,7 @@ dependencies = ["python-frontmatter", "bs4", "markdown"]  # Add your python depe
 dynamic = ["version"]  # the version is defined in the __init__.py file
 
 [project.optional-dependencies]
-test = ["pytest", "pytest-cov"]
+test = ["pytest", "pytest-cov", "faker"]
 doc = [
   "Sphinx >= 7.2.2",  # 7.2.2 is the first version that supports Python 3.9
   "myst-parser",  # Markdown support for Sphinx
