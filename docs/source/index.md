@@ -1,7 +1,14 @@
 ```{include} ../../README.md
 ```
 
-## Installation instructions
+## Installation
+
+
+```bash
+pip install mdslicer
+```
+
+## Developer's guide
 
 ```{toctree}
 :maxdepth: 2
