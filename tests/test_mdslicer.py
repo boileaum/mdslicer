@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 from textwrap import dedent
 
 from faker import Faker
+
 import pytest
 
 from mdslicer import mdslicer
