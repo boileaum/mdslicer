@@ -1,3 +1,4 @@
+from __future__ import annotations
 from textwrap import dedent
 
 from faker import Faker
