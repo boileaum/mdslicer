@@ -65,7 +65,7 @@ class MDSlicer:
         ... ## Section 2
         ... 
         ... Content 2'''
-        >>> e_content(md_content)
+        >>> slice_content(md_content)
         [{'title': 'Section 1', 'id': 'section-1', 'content': '<p>Content 1</p>'},
          {'title': 'Section 2', 'id': 'section-2', 'content': '<p>Content 2</p>'}]
 
