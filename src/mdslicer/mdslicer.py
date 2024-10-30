@@ -57,8 +57,15 @@ class MDSlicer:
         Convert markdown content to HTML.
         Return the list of HTML sections and the table of content tokens
 
-        >>> md_content = "## Section 1\nContent 1\n## Section 2\nContent 2"
-        >>> slice_content(md_content)
+        >>> md_content = '''
+        ... ## Section 1
+        ... 
+        ... Content 1
+        ... 
+        ... ## Section 2
+        ... 
+        ... Content 2'''
+        >>> e_content(md_content)
         [{'title': 'Section 1', 'id': 'section-1', 'content': '<p>Content 1</p>'},
          {'title': 'Section 2', 'id': 'section-2', 'content': '<p>Content 2</p>'}]
 

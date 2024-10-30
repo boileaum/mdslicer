@@ -12,7 +12,7 @@ pip install mdslicer
 
 ```{toctree}
 :maxdepth: 2
-installation.md
+developersguide.md
 ```
 
 ## Modules
