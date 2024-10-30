@@ -25,6 +25,7 @@ doc = [
   "furo",  # A modern theme for Sphinx
   "sphinx-copybutton",  # Add copy buttons to code blocks
   "sphinx-autobuild",  # Auto-rebuild Sphinx documentation when editing
+  "sphinx-autodoc-typehints",  # Include type hints in the documentation
 ]
 
 [project.license]

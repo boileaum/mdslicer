@@ -1,0 +1,75 @@
+
+<h1>MDSlicer</h1>
+<h2>Table of contents</h2>
+<ul>
+
+    <li><a href="#installation">Installation</a></li>
+
+    <li><a href="#usage">Usage</a></li>
+
+</ul>
+
+<section id="">
+    <a href="#">
+        <h2></h2>
+    </a>
+    <h1>MDSlicer</h1>
+<p><a href="https://github.com/boileaum/mdslicer/actions"><img alt="pipeline status" src="https://github.com/boileaum/mdslicer/actions/workflows/test.yml/badge.svg"/></a>
+<a href="https://boileaum.github.io/mdslicer/coverage"><img alt="cov" src="https://boileaum.github.io/mdslicer/coverage.svg"/></a>
+<a href="https://github.com/boileaum/mdslicer/releases"><img alt="Latest Release" src="https://img.shields.io/github/v/release/boileaum/mdslicer?label=release"/></a>
+<a href="https://boileaum.github.io/mdslicer"><img alt="Doc" src="https://img.shields.io/badge/doc-sphinx-blue"/></a></p>
+<p>A library to slice a markdown file into HTML sections.</p>
+
+</section>
+
+<section id="installation">
+    <a href="#installation">
+        <h2>Installation</h2>
+    </a>
+    
+<pre><code class="language-bash">pip install mdslicer
+</code></pre>
+
+</section>
+
+<section id="usage">
+    <a href="#usage">
+        <h2>Usage</h2>
+    </a>
+    
+<p>A common usage when converting a markdown file to HTML is to extract a YAML header and split the markdown content into sections delimited by h2 titles.
+This library uses:</p>
+<ul>
+<li>the <a href="https://pypi.org/project/python-frontmatter/"><code>frontmatter</code></a> library to extract metadata from the header,</li>
+<li>the <a href="https://python-markdown.github.io/"><code>markdown</code></a> library to parse the markdown into html and build a table of contents,</li>
+<li>the <a href="https://pypi.org/project/beautifulsoup4/"><code>beautifulsoup</code></a> library to split the html into sections</li>
+</ul>
+<p>Sections can then be used to generate an HTML file with a table of contents, for example using jinja2 templates:</p>
+<pre><code class="language-python">from mdslicer import MDSlicer
+from jinja2 import Template
+
+slicer = MDSlicer(extensions=['fenced_code'])
+header, sections = slicer.slice_file("README.md")
+
+template = Template(
+"""
+&lt;h1&gt;MDSlicer&lt;/h1&gt;
+&lt;h2&gt;Table of contents&lt;/h2&gt;
+&lt;ul&gt;
+{% for section in sections[1:] %}
+    &lt;li&gt;&lt;a href="#{{ section.id }}"&gt;{{ section.title }}&lt;/a&gt;&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;
+{% for section in sections %}
+&lt;section id="{{ section.id }}"&gt;
+    &lt;h2&gt;{{ section.title }}&lt;/h2&gt;
+    {{ section.content }}
+&lt;/section&gt;
+{% endfor %}
+"""
+)
+html = template.render(sections=sections)
+print(html)
+</code></pre>
+</section>
+

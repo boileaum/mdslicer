@@ -25,4 +25,4 @@ jobs:
           pip install -e ".[test]"
       - name: Run pytest
         run: |
-          pytest --durations=0 -sv
+          pytest --doctest-modules --durations=0 -sv 

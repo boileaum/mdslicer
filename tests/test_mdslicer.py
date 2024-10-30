@@ -100,8 +100,8 @@ def test_get_sections(slicer):
     assert sections[1]["content"] == "<p>Content 2</p>"
 
 
-def test_slice_content(slicer):
-    sections = slicer.slice_content(md_file_content)
+def test_slice_md_content(slicer):
+    sections = slicer.slice_md_content(md_file_content)
 
     assert len(sections) == 3
     assert sections[0]["title"] == ""
@@ -140,13 +140,26 @@ def test_parse_md_content_with_additional_parser():
         __to_replace__
         It's address is:""")
 
-    sections = slicer.slice_content(md_file_content)
+    sections = slicer.slice_md_content(md_file_content)
     assert len(sections) == 1
     assert "a replacement" in sections[0]["content"]
 
 
 def test_slice_file(slicer, md_file):
     header, sections = slicer.slice_file(md_file)
+    assert header == {
+        "title": title,
+        "nested": {
+            "key1": nested["key1"],
+            "key2": nested["key2"],
+            "key3": nested["key3"],
+        },
+    }
+    assert len(sections) == 3
+
+
+def test_slice_content(slicer):
+    header, sections = slicer.slice_content(md_file_header + md_file_content)
     assert header == {
         "title": title,
         "nested": {

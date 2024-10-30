@@ -19,10 +19,12 @@ release = __version__
 extensions = [
     "myst_parser",  # Markdown support
     "sphinx.ext.autodoc",  # Include documentation from docstrings
+    "sphinx.ext.doctest",  # Test snippets in the documentation
     "sphinx.ext.napoleon",  # Support for NumPy and Google style docstrings
     "sphinx.ext.viewcode",  # Add links to highlighted source code
     "sphinx_copybutton",  # Add copy buttons to code blocks
     "sphinx.ext.autosummary",  # Generate autodoc summaries
+    "sphinx_autodoc_typehints",  # Include type hints in the generated documentation
 ]
 
 templates_path = ["_templates"]  # Directory containing template files
@@ -36,7 +38,6 @@ html_theme = "furo"  # Set the HTML theme
 
 autodoc_default_options = {
     "members": True,  # Include all class and module members
-    "show-inheritance": True,  # Include inherited members
     "member-order": "groupwise",  # Group members by type
     "private-members": False,  # Exclude private members
     "special-members": "__init__",  # Include the initialiser

@@ -8,14 +8,7 @@
 pip install mdslicer
 ```
 
-## Developer's guide
-
-```{toctree}
-:maxdepth: 2
-developersguide.md
-```
-
-## Modules
+## Library Reference
 
 ```{eval-rst}
 .. autosummary::
@@ -24,6 +17,13 @@ developersguide.md
    :recursive:
 
    mdslicer.mdslicer
+```
+
+## Developer's guide
+
+```{toctree}
+:maxdepth: 2
+developersguide.md
 ```
 
 ## Indices and tables
