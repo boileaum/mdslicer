@@ -17,6 +17,7 @@ Parse markdown file into header, sections and table of content tokens
 
 """
 
+from __future__ import annotations
 from pathlib import Path
 import sys
 from typing import Callable
