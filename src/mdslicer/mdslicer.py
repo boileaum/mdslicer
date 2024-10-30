@@ -1,19 +1,15 @@
 """
-Parse markdown file into header, sections and table of content tokens
+Parse markdown file into header and sections.
+A header is a dictionary with the metadata of the markdown file.
+Sections are a list of dictionaries with the title, id and content of each section.
+For example:
 
->>> from mdslicer import MdSlicer
->>> slicer = MdSlicer()
->>> header, sections = slicer.slice_file("tests/data/sample.md")
->>> header["title"]
-'Example'
->>> sections[0]["title"]
-''
->>> sections[1]["title"]
-'Help today forget tell positive could yeah'
->>> toc_tokens[0]["name"]
-'Help today forget tell positive could yeah'
->>> toc_tokens[1]["name"]
-'Democrat ago stock if end place'
+.. highlight:: python
+.. code-block:: python
+
+    sections =
+    [{'title': 'Section 1', 'id': 'section-1', 'content': '\\n<p>Content 1</p>\\n'},
+    {'title': 'Section 2', 'id': 'section-2', 'content': '\\n<p>Content 2</p>'}]
 
 """
 
@@ -31,7 +27,7 @@ import yaml
 
 class MDSlicer:
     """
-    Parse markdown content into sections and table of content tokens
+    Parse markdown content into metadata header and sections
     """
 
     def __init__(
@@ -52,28 +48,30 @@ class MDSlicer:
         self.md.reset()
         self.additional_parser = additional_parser
 
-    def slice_content(self, md_content: str) -> list[dict]:
+    def slice_md_content(self, md_content: str) -> list[dict[str, str]]:
         """
-        Convert markdown content to HTML.
-        Return the list of HTML sections and the table of content tokens
-
-        >>> md_content = '''
-        ... ## Section 1
-        ... 
-        ... Content 1
-        ... 
-        ... ## Section 2
-        ... 
-        ... Content 2'''
-        >>> slice_content(md_content)
-        [{'title': 'Section 1', 'id': 'section-1', 'content': '<p>Content 1</p>'},
-         {'title': 'Section 2', 'id': 'section-2', 'content': '<p>Content 2</p>'}]
+        Convert markdown content to HTML sections.
 
         Args:
             md_content: Markdown content
 
         Returns:
             List of sections
+        
+        Example:
+            >>> from mdslicer import MDSlicer
+            >>> slicer = MDSlicer()
+            >>> md_content = '''
+            ... ## Section 1
+            ...
+            ... Content 1
+            ...
+            ... ## Section 2
+            ...
+            ... Content 2'''
+            >>> slicer.slice_md_content(md_content)  # doctest: +NORMALIZE_WHITESPACE
+            [{'title': 'Section 1', 'id': 'section-1', 'content': '\\n<p>Content 1</p>\\n'},
+            {'title': 'Section 2', 'id': 'section-2', 'content': '\\n<p>Content 2</p>'}]
         """
         if self.additional_parser:
             md_content = self.additional_parser(md_content)
@@ -83,20 +81,23 @@ class MDSlicer:
 
         return sections
 
-    def get_sections(self, html: str) -> list[dict]:
+    def get_sections(self, html: str) -> list[dict[str, str]]:
         """
         Get sections from the HTML content by splitting it with h2 tags
-
-        >>> html = "<h2>Section 1</h2><p>Content 1</p><h2>Section 2</h2><p>Content 2</p>"
-        >>> get_sections(html)
-        [{'title': 'Section 1', 'id': 'section-1', 'content': '<p>Content 1</p>'},
-         {'title': 'Section 2', 'id': 'section-2', 'content': '<p>Content 2</p>'}]
 
         Args:
             html: HTML content
 
         Returns:
             List of sections with an id, a title and an html content
+
+        Example:
+            >>> from mdslicer import MDSlicer
+            >>> slicer = MDSlicer()
+            >>> html = "<h2>Section 1</h2><p>Content 1</p><h2>Section 2</h2><p>Content 2</p>"
+            >>> slicer.get_sections(html)  # doctest: +NORMALIZE_WHITESPACE
+            [{'title': 'Section 1', 'id': 'section-1', 'content': '<p>Content 1</p>'},
+             {'title': 'Section 2', 'id': 'section-2', 'content': '<p>Content 2</p>'}]
         """
 
         # Important for performance:
@@ -130,19 +131,46 @@ class MDSlicer:
 
         return sections
 
-    def slice_file(
-        self, mdfile_path: str | Path
-    ) -> tuple[dict, list[dict]]:
+    def slice_content(self, file_content: str) -> tuple[dict, list[dict[str, str]]]:
+        """
+        Parse a markdown string into a YAML header and a content
+
+        Args:
+            file_content: content of the markdown file
+
+        Returns:
+            header of the markdown file,
+            content sections of the markdown file
+
+        Examples:
+            >>> slicer = MDSlicer()
+            >>> file_content = '''
+            ... ---
+            ... title: Example
+            ... ---
+            ...
+            ... ## Section 1
+            ...
+            ... Content 1
+            ...
+            ... ## Section 2
+            ...
+            ... Content 2'''
+            >>> header, sections = slicer.slice_content(file_content)
+            >>> print(header)
+            {'title': 'Example'}
+            >>> sections    # doctest: +NORMALIZE_WHITESPACE
+            [{'title': 'Section 1', 'id': 'section-1', 'content': '\\n<p>Content 1</p>\\n'},
+             {'title': 'Section 2', 'id': 'section-2', 'content': '\\n<p>Content 2</p>'}]
+
+        """
+        header, md_content = frontmatter.parse(file_content)
+        sections = self.slice_md_content(md_content)
+        return header, sections
+
+    def slice_file(self, mdfile_path: str | Path) -> tuple[dict, list[dict[str, str]]]:
         """
         Parse a markdown file into a YAML header and a content
-
-        >>> header, sections = slice_file("tests/data/sample.md")
-        >>> header["title"]
-        'Example'
-        >>> sections[0]["title"]
-        ''
-        >>> sections[1]["title"]
-        'Help today forget tell positive could yeah'
 
         Args:
             mdfile_path: Path to the markdown file
@@ -153,11 +181,8 @@ class MDSlicer:
         """
         mdfile_path = Path(mdfile_path)
         file_content = mdfile_path.read_text()
-        try:
-            header, md_content = frontmatter.parse(file_content)
 
+        try:
+            return self.slice_content(file_content)
         except (yaml.scanner.ScannerError, yaml.parser.ParserError) as e:
             sys.exit(f"Cannot parse {mdfile_path}:\n{file_content}\nReason: {e}")
-
-        sections = self.slice_content(md_content)
-        return header, sections
