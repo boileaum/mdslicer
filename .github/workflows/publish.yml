@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:  # Deploy documentation built with sphinx on github pages 
+  deploy:  # Deploy documentation built with sphinx on github pages
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -31,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: 3.x
       - name: Install dependencies
         run: |
           python -m venv .venv

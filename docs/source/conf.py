@@ -46,4 +46,4 @@ autosummary_generate = True  # Turn on sphinx.ext.autosummary
 add_module_names = False  # Remove module names from class/method signatures
 
 # to display the Returns section in the same style as the Args section
-napoleon_custom_sections = [('Returns', 'params_style')]
+napoleon_custom_sections = [("Returns", "params_style")]

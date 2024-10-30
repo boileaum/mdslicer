@@ -1,22 +1,11 @@
-# Installation
+# Developer's guide
 
-## Install python package
-
-### Using pip
-
-Your ssh key must be present on <https://github.com/-/profile/keys>.
+## Install python package in a virtual environment
 
 ```bash
-pip install git+ssh://git@github.com/boileaum/mdslicer.git
-```
-
-### Using pip in a virtual environment
-
-```bash
-git clone git@github.com:boileaum/mdslicer.git
-cd mdslicer
+git clone git@github.com:boileaum/mdslicer.git  # clone the repository
+cd mdslicer  # go to the project root directory
 python3 -m virtualenv .venv  # create a virtual environment
-source .venv/bin/activate  # activate the virtual environment
 pip install -e .  # install the package in editable mode
 ```
 
@@ -51,7 +40,7 @@ pip install -e ".[doc]"
 ### Build and serve the documentation locally
 
 ```bash
-sphinx-autobuild docs/source/ docs/_build/html
+sphinx-autobuild docs/source/ docs/_build/html  --watch src/mdslicer
 ```
 
 Go to <http://localhost:8000> and see the changes in `docs/source/` directory take effect immediately.
