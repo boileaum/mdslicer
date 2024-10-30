@@ -9,11 +9,11 @@ For example:
 
     sections =
     [{'title': 'Section 1', 'id': 'section-1', 'content': '\\n<p>Content 1</p>\\n'},
-    {'title': 'Section 2', 'id': 'section-2', 'content': '\\n<p>Content 2</p>'}]
+     {'title': 'Section 2', 'id': 'section-2', 'content': '\\n<p>Content 2</p>'}]
 
 """
 
-from __future__ import annotations
+from __future__ import annotations  # for compatibility with Python < 3.10
 from pathlib import Path
 import sys
 from typing import Callable
@@ -31,21 +31,16 @@ class MDSlicer:
     Parse markdown content into metadata header and sections
     """
 
-    def __init__(
-        self,
-        extensions: list[str] | None = None,
-        additional_parser: Callable | None = None,
-    ):
+    def __init__(self, additional_parser: Callable | None = None, **kwargs):
         """
         Create a markdown parser with the given extensions.
 
+
         Args:
-            extensions: List of markdown extensions
             additional_parser: Additional parser to apply on the markdown content
+            kwargs: Keyword arguments to pass to the `markdown.Markdown() <https://python-markdown.github.io/reference/#Markdown>`_ parser initializer (such as the list of extensions)
         """
-        if extensions is None:
-            extensions = []
-        self.md = markdown.Markdown(extensions=extensions)
+        self.md = markdown.Markdown(**kwargs)
         self.md.reset()
         self.additional_parser = additional_parser
 
@@ -58,11 +53,15 @@ class MDSlicer:
 
         Returns:
             List of sections
-        
+
         Example:
             >>> from mdslicer import MDSlicer
             >>> slicer = MDSlicer()
             >>> md_content = '''
+            ... # Title
+            ...
+            ... Some content
+            ...
             ... ## Section 1
             ...
             ... Content 1
@@ -71,7 +70,8 @@ class MDSlicer:
             ...
             ... Content 2'''
             >>> slicer.slice_md_content(md_content)  # doctest: +NORMALIZE_WHITESPACE
-            [{'title': 'Section 1', 'id': 'section-1', 'content': '\\n<p>Content 1</p>\\n'},
+            [{'title': '', 'id': '', 'content': '<h1>Title</h1>\\n<p>Some content</p>\\n'},
+            {'title': 'Section 1', 'id': 'section-1', 'content': '\\n<p>Content 1</p>\\n'},
             {'title': 'Section 2', 'id': 'section-2', 'content': '\\n<p>Content 2</p>'}]
         """
         if self.additional_parser:
@@ -100,9 +100,6 @@ class MDSlicer:
             [{'title': 'Section 1', 'id': 'section-1', 'content': '<p>Content 1</p>'},
              {'title': 'Section 2', 'id': 'section-2', 'content': '<p>Content 2</p>'}]
         """
-
-        # Important for performance:
-        # see https://python-markdown.github.io/extensions/api/#registerextension
 
         # Build section dict
         soup = bs4.BeautifulSoup(html, "html.parser")
