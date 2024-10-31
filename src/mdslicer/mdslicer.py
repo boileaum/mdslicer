@@ -15,15 +15,27 @@ For example:
 
 from __future__ import annotations  # for compatibility with Python < 3.10
 from pathlib import Path
-import sys
 from typing import Callable
-
 
 import bs4
 import frontmatter
 import markdown  # type: ignore
 from markdown.extensions.toc import slugify
-import yaml
+
+
+def split_header_and_content(file_content: str) -> tuple[dict, str]:
+    """
+    Split a markdown file content into a YAML header and a content
+
+    Args:
+        file_content: content of the markdown file
+
+    Returns:
+        header of the markdown file,
+        content of the markdown file
+    """
+    header, md_content = frontmatter.parse(file_content)
+    return header, md_content
 
 
 class MDSlicer:
@@ -162,7 +174,7 @@ class MDSlicer:
              {'title': 'Section 2', 'id': 'section-2', 'content': '\\n<p>Content 2</p>'}]
 
         """
-        header, md_content = frontmatter.parse(file_content)
+        header, md_content = split_header_and_content(file_content)
         sections = self.slice_md_content(md_content)
         return header, sections
 
@@ -179,8 +191,4 @@ class MDSlicer:
         """
         mdfile_path = Path(mdfile_path)
         file_content = mdfile_path.read_text()
-
-        try:
-            return self.slice_content(file_content)
-        except (yaml.scanner.ScannerError, yaml.parser.ParserError) as e:
-            sys.exit(f"Cannot parse {mdfile_path}:\n{file_content}\nReason: {e}")
+        return self.slice_content(file_content)
