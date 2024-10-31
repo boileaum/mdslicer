@@ -29,6 +29,14 @@ nested:
 ---
 """
 
+expected_header = {
+    "title": title,
+    "nested": {
+        "key1": nested["key1"],
+        "key2": nested["key2"],
+        "key3": nested["key3"],
+    },
+}
 
 address = fake.address()
 
@@ -51,8 +59,16 @@ You may want to see [a Map](https://strasmap.eu/Home).
 
 - {fake.sentence(nb_words=6)[:-1]},
 - {fake.sentence(nb_words=2)[:-1]},
-- {fake.sentence(nb_words=6)}
+- {fake.sentence(nb_words=6)}\
 """
+
+
+def test_split_header_and_content():
+    header, content = mdslicer.split_header_and_content(
+        md_file_header + md_file_content
+    )
+    assert header == expected_header
+    assert content == md_file_content
 
 
 @pytest.fixture
@@ -147,25 +163,11 @@ def test_parse_md_content_with_additional_parser():
 
 def test_slice_file(slicer, md_file):
     header, sections = slicer.slice_file(md_file)
-    assert header == {
-        "title": title,
-        "nested": {
-            "key1": nested["key1"],
-            "key2": nested["key2"],
-            "key3": nested["key3"],
-        },
-    }
+    assert header == expected_header
     assert len(sections) == 3
 
 
 def test_slice_content(slicer):
     header, sections = slicer.slice_content(md_file_header + md_file_content)
-    assert header == {
-        "title": title,
-        "nested": {
-            "key1": nested["key1"],
-            "key2": nested["key2"],
-            "key3": nested["key3"],
-        },
-    }
+    assert header == expected_header
     assert len(sections) == 3

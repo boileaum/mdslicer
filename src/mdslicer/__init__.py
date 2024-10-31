@@ -2,6 +2,6 @@
 
 __version__ = "0.2.0"
 
-from .mdslicer import MDSlicer
+from .mdslicer import MDSlicer, split_header_and_content
 
-__all__ = ["MDSlicer"]
+__all__ = ["MDSlicer", "split_header_and_content"]
