@@ -1,13 +1,6 @@
 ```{include} ../../README.md
 ```
 
-## Installation
-
-
-```bash
-pip install mdslicer
-```
-
 ## Library Reference
 
 ```{eval-rst}
